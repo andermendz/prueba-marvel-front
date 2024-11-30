@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 
-// todo - gestion favoritos
 function App() {
   const [comics, setComics] = useState([]);
   const [selectedComic, setSelectedComic] = useState(null);
@@ -13,6 +12,7 @@ function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [showAllCreators, setShowAllCreators] = useState(false);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
+  const [visibleComics, setVisibleComics] = useState(10);
 
   useEffect(() => {
     fetchComics();
@@ -68,7 +68,6 @@ function App() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    console.log("Registration data:", registerData);
     try {
       const response = await fetch("http://localhost:5000/api/register", {
         method: "POST",
@@ -76,7 +75,6 @@ function App() {
         body: JSON.stringify(registerData),
       });
       const data = await response.json();
-      console.log("Server response:", data);
       if (response.ok) {
         setShowRegister(false);
         setShowLogin(true);
@@ -123,6 +121,10 @@ function App() {
     } catch (error) {
       console.error("Error updating favorites:", error);
     }
+  };
+
+  const showMoreComics = () => {
+    setVisibleComics((prev) => prev + 10);
   };
 
   return (
@@ -200,13 +202,45 @@ function App() {
       )}
 
       <main>
-        {selectedComic ? (
-   <div className="comic-detail">
-   <button className="back-btn" onClick={() => setSelectedComic(null)}>
-     Back to Comics
-   </button>
+        {user && favorites.length > 0 && (
+          <div className="favorites-section">
+            <h2>Your Favorites</h2>
+            <div className="comics-grid">
+              {comics
+                .filter((comic) => favorites.includes(comic.id))
+                .map((comic) => (
+                  <div
+                    key={comic.id}
+                    className="comic-card"
+                    onClick={() => setSelectedComic(comic)}
+                  >
+                    <img
+                      src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                      alt={comic.title}
+                    />
+                    <h3>{comic.title}</h3>
+                    <button
+                      className={`favorite-btn active`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(comic.id);
+                      }}
+                    >
+                      ❤️
+                    </button>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
 
-   {user && (
+        {selectedComic ? (
+          <div className="comic-detail">
+            <button className="back-btn" onClick={() => setSelectedComic(null)}>
+              Back to Comics
+            </button>
+
+            {user && (
               <button
                 className={`favorite-btn ${
                   favorites.includes(selectedComic.id) ? "active" : ""
@@ -218,60 +252,58 @@ function App() {
                   : "Add to Favorites"}
               </button>
             )}
-   <h2>{selectedComic.title}</h2>
-   <img
-     src={`${selectedComic.thumbnail.path}.${selectedComic.thumbnail.extension}`}
-     alt={selectedComic.title}
-   />
+            <h2>{selectedComic.title}</h2>
+            <img
+              src={`${selectedComic.thumbnail.path}.${selectedComic.thumbnail.extension}`}
+              alt={selectedComic.title}
+            />
 
-   <div className="comic-info">
-     <p>
-       <strong>Description:</strong>{" "}
-       {selectedComic.description ||
-         `This issue of ${selectedComic.series?.name || "this series"} (Issue ${
-           selectedComic.issueNumber || "Unknown"
-         }) features stories and artwork by top creators.`}
-     </p>
- 
-     {selectedComic.variantDescription && (
-       <p>
-         <strong>Variant:</strong> {selectedComic.variantDescription}
-       </p>
-     )}
- 
-     <p>
-       <strong>Series:</strong> {selectedComic.series?.name || "Unknown"}
-     </p>
-     
-     <p>
-       <strong>Issue Number:</strong> {selectedComic.issueNumber || "N/A"}
-     </p>
- 
-     <p>
-       <strong>Format:</strong> {selectedComic.format || "Unknown"}
-     </p>
- 
-     <p>
-       <strong>Page Count:</strong> {selectedComic.pageCount || "N/A"}
-     </p>
- 
-     {selectedComic.isbn && (
-       <p>
-         <strong>ISBN:</strong> {selectedComic.isbn}
-       </p>
-     )}
- 
-     {selectedComic.prices && selectedComic.prices.length > 0 && (
-       <p>
-         <strong>Price:</strong> 
-         {( '$ ' + selectedComic.prices[0].price ) || " Price not available"}
-       </p>
-     )}
- 
-  
-   </div>
- 
+            <div className="comic-info">
+              <p>
+                <strong>Description:</strong>{" "}
+                {selectedComic.description ||
+                  `This issue of ${
+                    selectedComic.series?.name || "this series"
+                  } (Issue ${
+                    selectedComic.issueNumber || "Unknown"
+                  }) features stories and artwork by top creators.`}
+              </p>
 
+              {selectedComic.variantDescription && (
+                <p>
+                  <strong>Variant:</strong> {selectedComic.variantDescription}
+                </p>
+              )}
+
+              <p>
+                <strong>Series:</strong> {selectedComic.series?.name || "Unknown"}
+              </p>
+
+              <p>
+                <strong>Issue Number:</strong> {selectedComic.issueNumber || "N/A"}
+              </p>
+
+              <p>
+                <strong>Format:</strong> {selectedComic.format || "Unknown"}
+              </p>
+
+              <p>
+                <strong>Page Count:</strong> {selectedComic.pageCount || "N/A"}
+              </p>
+
+              {selectedComic.isbn && (
+                <p>
+                  <strong>ISBN:</strong> {selectedComic.isbn}
+                </p>
+              )}
+
+              {selectedComic.prices && selectedComic.prices.length > 0 && (
+                <p>
+                  <strong>Price:</strong>
+                  {('$ ' + selectedComic.prices[0].price) || " Price not available"}
+                </p>
+              )}
+            </div>
 
             <div className="details-grid">
               <div className="creators-section">
@@ -328,37 +360,43 @@ function App() {
                   )}
               </div>
             </div>
-
           </div>
         ) : (
-          <div className="comics-grid">
-            {comics.map((comic) => (
-              <div
-                key={comic.id}
-                className="comic-card"
-                onClick={() => setSelectedComic(comic)}
-              >
-                <img
-                  src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-                  alt={comic.title}
-                />
-                <h3>{comic.title}</h3>
-                {user && (
-                  <button
-                    className={`favorite-btn ${
-                      favorites.includes(comic.id) ? "active" : ""
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFavorite(comic.id);
-                    }}
-                  >
-                    {favorites.includes(comic.id) ? "❤️" : "🤍"}
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
+          <>
+            <div className="comics-grid">
+              {comics.slice(0, visibleComics).map((comic) => (
+                <div
+                  key={comic.id}
+                  className="comic-card"
+                  onClick={() => setSelectedComic(comic)}
+                >
+                  <img
+                    src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                    alt={comic.title}
+                  />
+                  <h3>{comic.title}</h3>
+                  {user && (
+                    <button
+                      className={`favorite-btn ${
+                        favorites.includes(comic.id) ? "active" : ""
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(comic.id);
+                      }}
+                    >
+                      {favorites.includes(comic.id) ? "❤️" : "🤍"}
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            {visibleComics < comics.length && (
+              <button className="show-more-btn" onClick={showMoreComics}>
+                Show More
+              </button>
+            )}
+          </>
         )}
       </main>
     </div>

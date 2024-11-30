@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function ComicDetail({ comic, user, favorites, onBack, onToggleFavorite }) {
   const [showAllCreators, setShowAllCreators] = useState(false);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
+    <div className={`max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg transition-all duration-500 ease-in-out ${
+      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+    }`}>
       <button 
         className="mb-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
         onClick={onBack}
@@ -33,13 +40,13 @@ function ComicDetail({ comic, user, favorites, onBack, onToggleFavorite }) {
       <img
         src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
         alt={comic.title}
-        className="w-full max-w-sm mx-auto rounded-lg shadow-md mb-6"
+        className="w-full max-w-lg mx-auto rounded-lg shadow-md mb-6"
       />
 
       <div className="space-y-4">
         <p className="text-gray-700">
           <span className="font-semibold">Description:</span>{" "}
-          {comic.description ||
+          {comic.description || 
             `This issue of ${comic.series?.name || "this series"} (Issue ${
               comic.issueNumber || "Unknown"
             }) features stories and artwork by top creators.`}
@@ -77,7 +84,7 @@ function ComicDetail({ comic, user, favorites, onBack, onToggleFavorite }) {
           {comic.prices && comic.prices.length > 0 && (
             <p className="text-gray-700">
               <span className="font-semibold">Price:</span> 
-              {('$ ' + comic.prices[0].price) || " Price not available"}
+              {`$ ${comic.prices[0].price}` || " Price not available"}
             </p>
           )}
         </div>

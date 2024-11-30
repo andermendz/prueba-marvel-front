@@ -4,6 +4,7 @@ import LoginModal from "./components/LoginModal";
 import RegisterModal from "./components/RegisterModal";
 import ComicsList from "./components/ComicsList";
 import ComicDetail from "./components/ComicDetail";
+import FavoritesList from "./components/FavoritesList";
 import "./App.css";
 
 function App() {
@@ -145,7 +146,7 @@ function App() {
         />
       )}
 
-      <main>
+<main>
         {selectedComic ? (
           <ComicDetail
             comic={selectedComic}
@@ -155,13 +156,22 @@ function App() {
             onToggleFavorite={toggleFavorite}
           />
         ) : (
-          <ComicsList
-            comics={comics}
-            user={user}
-            favorites={favorites}
-            onComicSelect={setSelectedComic}
-            onToggleFavorite={toggleFavorite}
-          />
+          <>
+            <FavoritesList
+              comics={comics}
+              favorites={favorites}
+              user={user}
+              onComicSelect={setSelectedComic}
+              onToggleFavorite={toggleFavorite}
+            />
+            <ComicsList
+              comics={comics}
+              user={user}
+              favorites={favorites}
+              onComicSelect={setSelectedComic}
+              onToggleFavorite={toggleFavorite}
+            />
+          </>
         )}
       </main>
     </div>

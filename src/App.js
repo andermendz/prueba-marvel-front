@@ -14,6 +14,7 @@ function App() {
   const [favorites, setFavorites] = useState([]);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     fetchComics();
@@ -49,6 +50,7 @@ function App() {
   };
 
   const handleLogin = async (loginData) => {
+    setErrorMessage(""); 
     try {
       const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
@@ -56,18 +58,22 @@ function App() {
         body: JSON.stringify(loginData),
       });
       const data = await response.json();
-      if (data.token) {
+      if (response.ok) {
         localStorage.setItem("token", data.token);
         setUser(true);
         fetchFavorites();
         setShowLogin(false);
+      } else {
+        setErrorMessage(data.error);
       }
     } catch (error) {
       console.error("Error logging in:", error);
+      setErrorMessage("An unexpected error occurred.");
     }
   };
 
   const handleRegister = async (registerData) => {
+    setErrorMessage(""); 
     try {
       const response = await fetch("http://localhost:5000/api/register", {
         method: "POST",
@@ -78,9 +84,12 @@ function App() {
       if (response.ok) {
         setShowRegister(false);
         setShowLogin(true);
+      } else {
+        setErrorMessage(data.error); 
       }
     } catch (error) {
       console.error("Error registering:", error);
+      setErrorMessage("An unexpected error occurred.");
     }
   };
 
@@ -125,28 +134,30 @@ function App() {
 
   return (
     <div className="app">
-      <Header 
-        user={user} 
-        onLogin={() => setShowLogin(true)} 
-        onRegister={() => setShowRegister(true)} 
-        onLogout={handleLogout} 
+      <Header
+        user={user}
+        onLogin={() => setShowLogin(true)}
+        onRegister={() => setShowRegister(true)}
+        onLogout={handleLogout}
       />
 
       {showLogin && (
-        <LoginModal 
-          onClose={() => setShowLogin(false)} 
-          onLogin={handleLogin} 
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onLogin={handleLogin}
+          errorMessage={errorMessage}
         />
       )}
 
       {showRegister && (
-        <RegisterModal 
-          onClose={() => setShowRegister(false)} 
-          onRegister={handleRegister} 
+        <RegisterModal
+          onClose={() => setShowRegister(false)}
+          onRegister={handleRegister}
+          errorMessage={errorMessage}
         />
       )}
 
-<main>
+      <main>
         {selectedComic ? (
           <ComicDetail
             comic={selectedComic}

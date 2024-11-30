@@ -19,14 +19,14 @@ const FavoritesList = ({
   <div 
     key={comic.id} 
     className="relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:scale-[1.02] group cursor-pointer"
-    onClick={() => onComicSelect(comic)}  // Add this onClick handler
+    onClick={() => onComicSelect(comic)}  
   >
     <div className="aspect-[2/3]">
       <img
         src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
         alt={comic.title}
         className="w-full h-full object-cover"
-        // Remove the onClick from here since the parent div handles it
+        
       />
       <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
         <h3 className="p-3 text-sm font-medium text-white">{comic.title}</h3>
@@ -37,7 +37,7 @@ const FavoritesList = ({
         ${favorites.includes(comic.id) ? 'bg-red-600/90 text-white' : 'bg-white/90 text-gray-600'}
         hover:scale-110`}
       onClick={(e) => {
-        e.stopPropagation();  // Add this to prevent triggering the parent onClick
+        e.stopPropagation();
         onToggleFavorite(comic.id);
       }}
     >

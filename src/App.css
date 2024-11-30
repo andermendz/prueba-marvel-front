@@ -1,85 +1,177 @@
+/* Modern CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 .app {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 2rem;
 }
 
 header {
-  margin-bottom: 30px;
+  margin-bottom: 3rem;
+  padding: 1rem 0;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 nav {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+nav h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e62429;
+}
+
 .auth-buttons {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .btn {
-  padding: 8px 16px;
+  padding: 0.6rem 1.2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: #e62429;
   color: white;
   cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #d41f24;
+  transform: translateY(-1px);
 }
 
 .comics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
 }
 
 .comic-card {
-  border-radius: 8px;
+  background: white;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.3s ease-in-out;
+  position: relative;
 }
 
 .comic-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .comic-card img {
   width: 100%;
-  height: 300px;
+  height: 350px;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.comic-card:hover img {
+  transform: scale(1.05);
 }
 
 .comic-card h3 {
-  padding: 10px;
-  margin: 0;
-  font-size: 14px;
+  padding: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  background: rgba(255, 255, 255, 0.95);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  backdrop-filter: blur(5px);
 }
 
 .comic-detail {
-  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .comic-detail img {
-  max-width: 400px;
-  border-radius: 8px;
-  margin: 20px 0;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 2rem 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .back-btn {
-  padding: 8px 16px;
-  margin-bottom: 20px;
+  padding: 0.6rem 1.2rem;
   border: none;
-  border-radius: 4px;
-  background-color: #e62429;
+  border-radius: 6px;
+  background-color: #333;
   color: white;
   cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 2rem;
+}
+
+.back-btn:hover {
+  background-color: #222;
+  transform: translateY(-1px);
+}
+
+.comic-detail h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
 }
 
 .comic-detail p {
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.7;
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem;
+  }
+  
+  .comics-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .comic-card img {
+    height: 280px;
+  }
+  
+  .comic-detail {
+    padding: 1rem;
+  }
 }

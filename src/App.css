@@ -1,38 +1,85 @@
-.App {
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  margin-bottom: 30px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #e62429;
+  color: white;
+  cursor: pointer;
+}
+
+.comics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.comic-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.comic-card:hover {
+  transform: translateY(-5px);
+}
+
+.comic-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.comic-card h3 {
+  padding: 10px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.comic-detail {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.comic-detail img {
+  max-width: 400px;
+  border-radius: 8px;
+  margin: 20px 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.back-btn {
+  padding: 8px 16px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #e62429;
   color: white;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.comic-detail p {
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
 }

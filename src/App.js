@@ -205,13 +205,25 @@ function App() {
    <button className="back-btn" onClick={() => setSelectedComic(null)}>
      Back to Comics
    </button>
+
+   {user && (
+              <button
+                className={`favorite-btn ${
+                  favorites.includes(selectedComic.id) ? "active" : ""
+                }`}
+                onClick={() => toggleFavorite(selectedComic.id)}
+              >
+                {favorites.includes(selectedComic.id)
+                  ? "Remove from Favorites"
+                  : "Add to Favorites"}
+              </button>
+            )}
    <h2>{selectedComic.title}</h2>
    <img
      src={`${selectedComic.thumbnail.path}.${selectedComic.thumbnail.extension}`}
      alt={selectedComic.title}
    />
-   
-   {/* Add new details section */}
+
    <div className="comic-info">
      <p>
        <strong>Description:</strong>{" "}
@@ -317,18 +329,6 @@ function App() {
               </div>
             </div>
 
-            {user && (
-              <button
-                className={`favorite-btn ${
-                  favorites.includes(selectedComic.id) ? "active" : ""
-                }`}
-                onClick={() => toggleFavorite(selectedComic.id)}
-              >
-                {favorites.includes(selectedComic.id)
-                  ? "Remove from Favorites"
-                  : "Add to Favorites"}
-              </button>
-            )}
           </div>
         ) : (
           <div className="comics-grid">

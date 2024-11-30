@@ -194,17 +194,21 @@ nav h1 {
 }
 
 .comic-detail .favorite-btn {
-  margin-top: 1rem;
-  padding: 0.6rem 1.5rem;
-  border: none;
+  position: static; /* Override the absolute positioning */
+  width: auto; /* Override the fixed width */
+  height: auto; /* Override the fixed height */
+  margin: 1rem auto; /* Center the button and add vertical spacing */
+  padding: 0.8rem 1.5rem;
+  display: block; /* Make it a block element */
   border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
   background-color: #e62429;
   color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.comic-detail .favorite-btn.active {
+  background-color: #d41f24;
 }
 
 .comic-detail .favorite-btn:hover {

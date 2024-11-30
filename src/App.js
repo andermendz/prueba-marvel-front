@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from "react";
+import Header from "./components/Header";
+import LoginModal from "./components/LoginModal";
+import RegisterModal from "./components/RegisterModal";
+import ComicsList from "./components/ComicsList";
+import ComicDetail from "./components/ComicDetail";
 import "./App.css";
 
 function App() {
@@ -6,19 +11,15 @@ function App() {
   const [selectedComic, setSelectedComic] = useState(null);
   const [user, setUser] = useState(null);
   const [favorites, setFavorites] = useState([]);
-  const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [registerData, setRegisterData] = useState({ email: "", password: "" });
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const [showAllCreators, setShowAllCreators] = useState(false);
-  const [showAllCharacters, setShowAllCharacters] = useState(false);
-  const [visibleComics, setVisibleComics] = useState(10);
 
   useEffect(() => {
     fetchComics();
     const token = localStorage.getItem("token");
     if (token) {
       fetchFavorites();
+      setUser(true);
     }
   }, []);
 
@@ -46,8 +47,7 @@ function App() {
     }
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (loginData) => {
     try {
       const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
@@ -66,8 +66,7 @@ function App() {
     }
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const handleRegister = async (registerData) => {
     try {
       const response = await fetch("http://localhost:5000/api/register", {
         method: "POST",
@@ -123,280 +122,46 @@ function App() {
     }
   };
 
-  const showMoreComics = () => {
-    setVisibleComics((prev) => prev + 10);
-  };
-
   return (
     <div className="app">
-      <header>
-        <nav>
-          <h1>Marvel Comics</h1>
-          <div className="auth-buttons">
-            {user ? (
-              <button className="btn" onClick={handleLogout}>
-                Logout
-              </button>
-            ) : (
-              <>
-                <button className="btn" onClick={() => setShowLogin(true)}>
-                  Login
-                </button>
-                <button className="btn" onClick={() => setShowRegister(true)}>
-                  Register
-                </button>
-              </>
-            )}
-          </div>
-        </nav>
-      </header>
+      <Header 
+        user={user} 
+        onLogin={() => setShowLogin(true)} 
+        onRegister={() => setShowRegister(true)} 
+        onLogout={handleLogout} 
+      />
 
       {showLogin && (
-        <div className="modal">
-          <form onSubmit={handleLogin}>
-            <input
-              type="email"
-              placeholder="Email"
-              onChange={(e) =>
-                setLoginData({ ...loginData, email: e.target.value })
-              }
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              onChange={(e) =>
-                setLoginData({ ...loginData, password: e.target.value })
-              }
-            />
-            <button type="submit">Login</button>
-            <button type="button" onClick={() => setShowLogin(false)}>
-              Cancel
-            </button>
-          </form>
-        </div>
+        <LoginModal 
+          onClose={() => setShowLogin(false)} 
+          onLogin={handleLogin} 
+        />
       )}
 
       {showRegister && (
-        <div className="modal">
-          <form onSubmit={handleRegister}>
-            <input
-              type="email"
-              placeholder="Email"
-              onChange={(e) =>
-                setRegisterData({ ...registerData, email: e.target.value })
-              }
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              onChange={(e) =>
-                setRegisterData({ ...registerData, password: e.target.value })
-              }
-            />
-            <button type="submit">Register</button>
-            <button type="button" onClick={() => setShowRegister(false)}>
-              Cancel
-            </button>
-          </form>
-        </div>
+        <RegisterModal 
+          onClose={() => setShowRegister(false)} 
+          onRegister={handleRegister} 
+        />
       )}
 
       <main>
-        {user && favorites.length > 0 && (
-          <div className="favorites-section">
-            <h2>Your Favorites</h2>
-            <div className="comics-grid">
-              {comics
-                .filter((comic) => favorites.includes(comic.id))
-                .map((comic) => (
-                  <div
-                    key={comic.id}
-                    className="comic-card"
-                    onClick={() => setSelectedComic(comic)}
-                  >
-                    <img
-                      src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-                      alt={comic.title}
-                    />
-                    <h3>{comic.title}</h3>
-                    <button
-                      className={`favorite-btn active`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(comic.id);
-                      }}
-                    >
-                      ❤️
-                    </button>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
-
         {selectedComic ? (
-          <div className="comic-detail">
-            <button className="back-btn" onClick={() => setSelectedComic(null)}>
-              Back to Comics
-            </button>
-
-            {user && (
-              <button
-                className={`favorite-btn ${
-                  favorites.includes(selectedComic.id) ? "active" : ""
-                }`}
-                onClick={() => toggleFavorite(selectedComic.id)}
-              >
-                {favorites.includes(selectedComic.id)
-                  ? "Remove from Favorites"
-                  : "Add to Favorites"}
-              </button>
-            )}
-            <h2>{selectedComic.title}</h2>
-            <img
-              src={`${selectedComic.thumbnail.path}.${selectedComic.thumbnail.extension}`}
-              alt={selectedComic.title}
-            />
-
-            <div className="comic-info">
-              <p>
-                <strong>Description:</strong>{" "}
-                {selectedComic.description ||
-                  `This issue of ${
-                    selectedComic.series?.name || "this series"
-                  } (Issue ${
-                    selectedComic.issueNumber || "Unknown"
-                  }) features stories and artwork by top creators.`}
-              </p>
-
-              {selectedComic.variantDescription && (
-                <p>
-                  <strong>Variant:</strong> {selectedComic.variantDescription}
-                </p>
-              )}
-
-              <p>
-                <strong>Series:</strong> {selectedComic.series?.name || "Unknown"}
-              </p>
-
-              <p>
-                <strong>Issue Number:</strong> {selectedComic.issueNumber || "N/A"}
-              </p>
-
-              <p>
-                <strong>Format:</strong> {selectedComic.format || "Unknown"}
-              </p>
-
-              <p>
-                <strong>Page Count:</strong> {selectedComic.pageCount || "N/A"}
-              </p>
-
-              {selectedComic.isbn && (
-                <p>
-                  <strong>ISBN:</strong> {selectedComic.isbn}
-                </p>
-              )}
-
-              {selectedComic.prices && selectedComic.prices.length > 0 && (
-                <p>
-                  <strong>Price:</strong>
-                  {('$ ' + selectedComic.prices[0].price) || " Price not available"}
-                </p>
-              )}
-            </div>
-
-            <div className="details-grid">
-              <div className="creators-section">
-                {selectedComic.creators &&
-                  selectedComic.creators.items.length > 0 && (
-                    <div>
-                      <strong>Creators:</strong>
-                      <ul>
-                        {selectedComic.creators.items
-                          .slice(0, showAllCreators ? undefined : 3)
-                          .map((creator) => (
-                            <li key={creator.resourceURI}>
-                              {creator.name} - {creator.role}
-                            </li>
-                          ))}
-                      </ul>
-                      {selectedComic.creators.items.length > 3 && (
-                        <button
-                          className="show-more-btn"
-                          onClick={() => setShowAllCreators(!showAllCreators)}
-                        >
-                          {showAllCreators ? "Show Less" : "Show More"}
-                        </button>
-                      )}
-                    </div>
-                  )}
-              </div>
-
-              <div className="characters-section">
-                {selectedComic.characters &&
-                  selectedComic.characters.items.length > 0 && (
-                    <div>
-                      <strong>Characters:</strong>
-                      <ul>
-                        {selectedComic.characters.items
-                          .slice(0, showAllCharacters ? undefined : 3)
-                          .map((character) => (
-                            <li key={character.resourceURI}>
-                              {character.name}
-                            </li>
-                          ))}
-                      </ul>
-                      {selectedComic.characters.items.length > 3 && (
-                        <button
-                          className="show-more-btn"
-                          onClick={() =>
-                            setShowAllCharacters(!showAllCharacters)
-                          }
-                        >
-                          {showAllCharacters ? "Show Less" : "Show More"}
-                        </button>
-                      )}
-                    </div>
-                  )}
-              </div>
-            </div>
-          </div>
+          <ComicDetail
+            comic={selectedComic}
+            user={user}
+            favorites={favorites}
+            onBack={() => setSelectedComic(null)}
+            onToggleFavorite={toggleFavorite}
+          />
         ) : (
-          <>
-            <div className="comics-grid">
-              {comics.slice(0, visibleComics).map((comic) => (
-                <div
-                  key={comic.id}
-                  className="comic-card"
-                  onClick={() => setSelectedComic(comic)}
-                >
-                  <img
-                    src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-                    alt={comic.title}
-                  />
-                  <h3>{comic.title}</h3>
-                  {user && (
-                    <button
-                      className={`favorite-btn ${
-                        favorites.includes(comic.id) ? "active" : ""
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(comic.id);
-                      }}
-                    >
-                      {favorites.includes(comic.id) ? "❤️" : "🤍"}
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-            {visibleComics < comics.length && (
-              <button className="show-more-btn" onClick={showMoreComics}>
-                Show More
-              </button>
-            )}
-          </>
+          <ComicsList
+            comics={comics}
+            user={user}
+            favorites={favorites}
+            onComicSelect={setSelectedComic}
+            onToggleFavorite={toggleFavorite}
+          />
         )}
       </main>
     </div>

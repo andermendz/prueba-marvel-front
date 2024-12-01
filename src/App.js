@@ -27,9 +27,7 @@ function App() {
 
   const fetchComics = async () => {
     try {
-      const response = await fetch(
-        "https://prueba-marvel-back.onrender.com:5000/api/comics"
-      );
+      const response = await fetch("https://prueba-marvel-back.onrender.com/api/comics");
       const data = await response.json();
       setComics(data);
     } catch (error) {
@@ -39,14 +37,11 @@ function App() {
 
   const fetchFavorites = async () => {
     try {
-      const response = await fetch(
-        "https://prueba-marvel-back.onrender.com:5000/api/favorites",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await fetch("https://prueba-marvel-back.onrender.com/api/favorites", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       const data = await response.json();
       setFavorites(data);
     } catch (error) {
@@ -55,16 +50,13 @@ function App() {
   };
 
   const handleLogin = async (loginData) => {
-    setErrorMessage("");
+    setErrorMessage(""); 
     try {
-      const response = await fetch(
-        "https://prueba-marvel-back.onrender.com:5000/api/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(loginData),
-        }
-      );
+      const response = await fetch("https://prueba-marvel-back.onrender.com/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginData),
+      });
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("token", data.token);
@@ -81,22 +73,19 @@ function App() {
   };
 
   const handleRegister = async (registerData) => {
-    setErrorMessage("");
+    setErrorMessage(""); 
     try {
-      const response = await fetch(
-        "https://prueba-marvel-back.onrender.com:5000/api/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(registerData),
-        }
-      );
+      const response = await fetch("https://prueba-marvel-back.onrender.com/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registerData),
+      });
       const data = await response.json();
       if (response.ok) {
         setShowRegister(false);
         setShowLogin(true);
       } else {
-        setErrorMessage(data.error);
+        setErrorMessage(data.error); 
       }
     } catch (error) {
       console.error("Error registering:", error);
@@ -116,7 +105,7 @@ function App() {
     try {
       if (favorites.includes(comicId)) {
         const response = await fetch(
-          `https://prueba-marvel-back.onrender.com:5000/api/favorites/${comicId}`,
+          `https://prueba-marvel-back.onrender.com/api/favorites/${comicId}`,
           {
             method: "DELETE",
             headers: {
@@ -127,17 +116,14 @@ function App() {
         const data = await response.json();
         setFavorites(data);
       } else {
-        const response = await fetch(
-          "https://prueba-marvel-back.onrender.com:5000/api/favorites",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ comicId }),
-          }
-        );
+        const response = await fetch("https://prueba-marvel-back.onrender.com/api/favorites", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ comicId }),
+        });
         const data = await response.json();
         setFavorites(data);
       }

@@ -28,24 +28,17 @@ function App() {
 
   const fetchComics = async () => {
     try {
-      const response = await fetch("https://prueba-marvel-back.vercel.app/api/comics", {
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await fetch("https://prueba-marvel-back.onrender.com/api/comics");
       const data = await response.json();
       setComics(data);
     } catch (error) {
       console.error("Error fetching comics:", error);
     }
   };
-  
 
   const fetchFavorites = async () => {
     try {
-      const response = await fetch("https://prueba-marvel-back.vercel.app/api/favorites", {
+      const response = await fetch("https://prueba-marvel-back.onrender.com/api/favorites", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -60,7 +53,7 @@ function App() {
   const handleLogin = async (loginData) => {
     setErrorMessage("");
     try {
-      const response = await fetch("https://prueba-marvel-back.vercel.app/api/login", {
+      const response = await fetch("https://prueba-marvel-back.onrender.com/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
@@ -83,7 +76,7 @@ function App() {
   const handleRegister = async (registerData) => {
     setErrorMessage("");
     try {
-      const response = await fetch("https://prueba-marvel-back.vercel.app/api/register", {
+      const response = await fetch("https://prueba-marvel-back.onrender.com/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(registerData),
@@ -117,7 +110,7 @@ function App() {
     try {
       if (favorites.includes(comicId)) {
         const response = await fetch(
-          `https://prueba-marvel-back.vercel.app/api/favorites/${comicId}`,
+          `https://prueba-marvel-back.onrender.com/api/favorites/${comicId}`,
           {
             method: "DELETE",
             headers: {
@@ -128,7 +121,7 @@ function App() {
         const data = await response.json();
         setFavorites(data);
       } else {
-        const response = await fetch("https://prueba-marvel-back.vercel.app/api/favorites", {
+        const response = await fetch("https://prueba-marvel-back.onrender.com/api/favorites", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -167,7 +160,7 @@ function App() {
       onClose={() => setShowRegister(false)}
       onRegister={handleRegister}
       errorMessage={errorMessage}
-      setErrorMessage={setErrorMessage}  
+      setErrorMessage={setErrorMessage} 
     />
       )}
 

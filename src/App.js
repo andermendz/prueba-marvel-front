@@ -156,11 +156,12 @@ function App() {
       )}
 
       {showRegister && (
-        <RegisterModal
-          onClose={() => setShowRegister(false)}
-          onRegister={handleRegister}
-          errorMessage={errorMessage}
-        />
+      <RegisterModal
+      onClose={() => setShowRegister(false)}
+      onRegister={handleRegister}
+      errorMessage={errorMessage}
+      setErrorMessage={setErrorMessage}  
+    />
       )}
 
       <main>

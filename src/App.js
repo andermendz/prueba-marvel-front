@@ -28,22 +28,13 @@ function App() {
 
   const fetchComics = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/comics", {
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const response = await fetch("http://localhost:5000/api/comics");
       const data = await response.json();
       setComics(data);
     } catch (error) {
       console.error("Error fetching comics:", error);
     }
   };
-  
 
   const fetchFavorites = async () => {
     try {
@@ -169,7 +160,7 @@ function App() {
       onClose={() => setShowRegister(false)}
       onRegister={handleRegister}
       errorMessage={errorMessage}
-      setErrorMessage={setErrorMessage}  
+      setErrorMessage={setErrorMessage} 
     />
       )}
 

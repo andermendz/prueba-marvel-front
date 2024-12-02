@@ -31,12 +31,10 @@ function App() {
       const response = await fetch("https://prueba-marvel-back.vercel.app/api/comics", {
         credentials: 'include',
         headers: {
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
         }
       });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
       const data = await response.json();
       setComics(data);
     } catch (error) {

@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 
-function LoginModal({ onClose, onLogin, errorMessage }) {
+function LoginModal({ onClose, onLogin, errorMessage, successMessage }) { 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onLogin(loginData);
+    try {
+      await onLogin(loginData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -13,6 +17,9 @@ function LoginModal({ onClose, onLogin, errorMessage }) {
       <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
         {errorMessage && (
           <div className="text-red-600 text-sm mb-4">{errorMessage}</div>
+        )}
+        {successMessage && (
+          <div className="text-green-600 text-sm mb-4">{successMessage}</div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input

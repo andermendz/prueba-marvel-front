@@ -15,6 +15,7 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loginSuccessMessage, setLoginSuccessMessage] = useState("");
 
   useEffect(() => {
     fetchComics();
@@ -50,7 +51,7 @@ function App() {
   };
 
   const handleLogin = async (loginData) => {
-    setErrorMessage(""); 
+    setErrorMessage("");
     try {
       const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
@@ -73,7 +74,7 @@ function App() {
   };
 
   const handleRegister = async (registerData) => {
-    setErrorMessage(""); 
+    setErrorMessage("");
     try {
       const response = await fetch("http://localhost:5000/api/register", {
         method: "POST",
@@ -84,8 +85,12 @@ function App() {
       if (response.ok) {
         setShowRegister(false);
         setShowLogin(true);
+        setLoginSuccessMessage("Account created successfully! Please login.");
+        setTimeout(() => {
+          setLoginSuccessMessage("");
+        }, 3000);
       } else {
-        setErrorMessage(data.error); 
+        setErrorMessage(data.error);
       }
     } catch (error) {
       console.error("Error registering:", error);
@@ -146,6 +151,7 @@ function App() {
           onClose={() => setShowLogin(false)}
           onLogin={handleLogin}
           errorMessage={errorMessage}
+          successMessage={loginSuccessMessage}
         />
       )}
 

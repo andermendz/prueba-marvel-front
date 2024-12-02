@@ -7,6 +7,8 @@
 ## Demo Funcional
 El proyecto está desplegado y puede accederse en: https://prueba-marvel-front.vercel.app/
 
+**Nota:** El servidor backend opera en modo standby para optimizar recursos. La primera solicitud puede experimentar una breve demora mientras el servidor se reactiva. Las solicitudes posteriores funcionarán con normalidad.
+
 ## Instalación
 1. Clonar el repositorio
     ```bash
